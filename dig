@@ -5,7 +5,7 @@ shell.run("/dig", "restore")
 ]]
 
 local stateFileName = "/dig.state"
-local maxDepth = 1  -- for debug, default=1000
+local maxDepth = 1000  -- for debug, default=1000
 
 local restore = false
 local size = 0
