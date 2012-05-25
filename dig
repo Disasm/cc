@@ -192,13 +192,9 @@ local function tryForward()
 end
 
 local function forceForward()
-    if not turtle.forward() then
-        if not forceDig() then
-            return false
-        end
-        if not turtle.forward() then
-            return false
-        end
+    while not turtle.forward() do
+        forceDig()
+        sleep(0.8)
     end
     xPos = xPos + xDir
     zPos = zPos + zDir
@@ -279,7 +275,7 @@ if tArgs[1]=="restore" then
     print("restoring state...")
     restoreState()
 elseif tArgs[1]=="autorun" then
-    local s = "while turtle.up() do\nend"
+    local s = "while turtle.up() do\nend\nturtle.down()\n"
     local f = fs.open("/startup", "w")
     f.write(s)
     f.close()
@@ -315,13 +311,9 @@ end
 
 
 if restore then
-    print("xPos="..xPos.." zPos="..zPos.." xDir="..xDir.." zDir="..zDir)
     local x,z,xd,zd = xPos,zPos,xDir,zDir
-    while turtle.up() do
-    end
-    goto(0, -1, 0, -1)
-    while turtle.down() do
-    end
+    xPos,zPos,xDir,zDir = 0,-1,0,1
+    depth = 0
     goto(x,z,xd,zd)
 else
     goto(0, 0, 0, 1)
