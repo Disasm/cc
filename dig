@@ -278,6 +278,12 @@ if tArgs[1]=="restore" then
     restore = true
     print("restoring state...")
     restoreState()
+elseif tArgs[1]=="autorun" then
+    local s = "while turtle.up() do\nend"
+    local f = fs.open("/startup", "w")
+    f.write(s)
+    f.close()
+    return
 else
     if #tArgs < 2 then
         usage()
