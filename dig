@@ -323,7 +323,7 @@ while true do
     saveState()
     while not makeMine() do
         local x,z,xd,zd = xPos,zPos,xDir,zDir
-        goto(0, 0, 0, -1)
+        goto(0, -1, 0, -1)
         dropResources()
         goto(x,z,xd,zd)
         saveState()
