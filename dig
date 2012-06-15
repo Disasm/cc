@@ -40,7 +40,7 @@ local function restoreState()
         size = result[1]
         shitSize = result[2]
         xPos, zPos = result[3], result[4]
-        xDir, xDir = result[5], result[6]
+        xDir, zDir = result[5], result[6]
         maxDepth = result[7]
         return true
     else
@@ -201,6 +201,12 @@ local function forceForward()
     return true
 end
 
+local function gotoDir(xd, zd)
+    while (xDir ~= xd) or (zDir ~= zd) do
+        turnLeft()
+    end
+end
+
 local function goto(x, z, xd0, zd0)
     local xd = 0
     if (xPos-x) < 0 then
@@ -216,26 +222,17 @@ local function goto(x, z, xd0, zd0)
         zd = -1
     end
 
-    while xDir ~= xd do
-        turnLeft()
-    end
+    gotoDir(xd, 0)
     while xPos ~= x do
         forceForward()
     end
 
-    while zDir ~= zd do
-        turnLeft()
-    end
+    gotoDir(0, zd)
     while zPos ~= z do
         forceForward()
     end
 
-    while xDir ~= xd0 do
-        turnLeft()
-    end
-    while zDir ~= zd0 do
-        turnLeft()
-    end
+    gotoDir(xd0, zd0)
 end
 
 local function goNext()
