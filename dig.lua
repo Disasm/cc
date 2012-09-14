@@ -87,6 +87,17 @@ local function refuel(needed)
     return true
 end
 
+local nofuel = false
+
+local function checkFuel(needed)
+    if refuel(needed)==true then
+        nofuel = false
+        return true
+    end
+    nofuel = true
+    return false
+end
+
 local function hasSlots()
     if turtle.getItemCount(16)==0 then
         return true
@@ -171,7 +182,7 @@ local function tryUp()
 end
 
 local function makeMine()
-    if refuel(512)==false then
+    if checkFuel(512)==false then
         return false
     end
 
@@ -356,10 +367,10 @@ while true do
         local x,z,xd,zd = xPos,zPos,xDir,zDir
         goto(0, -1, 0, -1)
         dropResources()
-        if refuel(512)==false then
+        if nofuel then
             print("No enough fuel")
             goto(0, -1, 0, 1)
-            break
+            return
         end
         goto(x,z,xd,zd)
         saveState()
