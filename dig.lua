@@ -21,8 +21,7 @@ local function usage()
     print( "###" )
     print( "###" )
     print( "^    <-turtle" )
-    print( " " )
-    print( "@    <-transposer" )
+    print( "@    <-chest" )
 end
 
 local function restoreState()
@@ -58,6 +57,34 @@ end
 
 local function deleteState()
     fs.delete(stateFileName)
+end
+
+local function refuel(needed)
+    local fuelLevel = turtle.getFuelLevel()
+    if fuelLevel == "unlimited" then
+        return true
+    end
+
+    if fuelLevel < needed then
+        for n=1,16 do
+            if turtle.getItemCount(n) > 0 then
+                turtle.select( n )
+                if turtle.refuel(1) then
+                    while turtle.getItemCount(n) > 0 and turtle.getFuelLevel() < needed do
+                        turtle.refuel(1)
+                    end
+                end
+                if turtle.getFuelLevel() >= needed then
+                    turtle.select(1)
+                    return true
+                end
+            end
+        end
+        turtle.select(1)
+        return false
+    end
+
+    return true
 end
 
 local function hasSlots()
@@ -144,6 +171,7 @@ local function tryUp()
 end
 
 local function makeMine()
+    refuel(512)
     while tryDown() do
     end
     while depth>0 do
@@ -178,6 +206,7 @@ local function turnRight()
 end
 
 local function tryForward()
+    refuel(10)
     if not turtle.forward() then
         if not tryDig() then
             return false
@@ -192,6 +221,7 @@ local function tryForward()
 end
 
 local function forceForward()
+    refuel(10)
     while not turtle.forward() do
         forceDig()
         sleep(0.8)
