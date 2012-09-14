@@ -4,32 +4,32 @@ if #tArgs < 1 then
 	return
 end
 
-local function refuel(nLimit)
-    if turtle.getFuelLevel() ~= "unlimited" then
+local function refuel(needed)
+    local fuelLevel = turtle.getFuelLevel()
+    if fuelLevel == "unlimited" then
+        return true
+    end
+
+    if fuelLevel < needed then
         for n=1,16 do
-            local nCount = turtle.getItemCount(n)
-            if nCount > 0 then
+            if turtle.getItemCount(n) > 0 then
                 turtle.select( n )
-                if nCount >= nLimit then
-                    if turtle.refuel( nLimit ) then
-                        break
+                if turtle.refuel(1) then
+                    while turtle.getItemCount(n) > 0 and turtle.getFuelLevel() < needed do
+                        turtle.refuel(1)
                     end
-	            else
-                    if turtle.refuel( nCount ) then
-                        nLimit = nLimit - nCount
-                    end
+                end
+                if turtle.getFuelLevel() >= needed then
+                    turtle.select(1)
+                    return true
                 end
             end
         end
+        turtle.select(1)
+        return false
     end
-end
 
-local function checkFuel(distance)
-    if turtle.getFuelLevel() ~= "unlimited" then
-        if turtle.getFuelLevel() < distance then
-            refuel(distance + 2)
-        end
-    end
+    return true
 end
 
 local tHandlers = {
@@ -71,7 +71,7 @@ while nArg <= #tArgs do
 
 	local fnHandler = tHandlers[string.lower(sDirection)]
 	if fnHandler then
-        checkFuel(nDistance)
+        refuel(nDistance)
 		for n=1,nDistance do
 			fnHandler( nArg )
 		end
