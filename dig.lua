@@ -88,7 +88,7 @@ local function refuel(needed)
 end
 
 local function hasSlots()
-    if turtle.getItemCount(9)==0 then
+    if turtle.getItemCount(16)==0 then
         return true
     else
         return false
@@ -189,7 +189,7 @@ end
 
 local function dropResources()
     local k = shitSize+1
-    for i=k,9 do
+    for i=k,16 do
         if turtle.getItemCount(i)>0 then
             turtle.select(i)
             turtle.drop()
