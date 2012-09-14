@@ -171,7 +171,10 @@ local function tryUp()
 end
 
 local function makeMine()
-    refuel(512)
+    if refuel(512)==false then
+        return false
+    end
+
     while tryDown() do
     end
     while depth>0 do
@@ -352,6 +355,11 @@ while true do
         local x,z,xd,zd = xPos,zPos,xDir,zDir
         goto(0, -1, 0, -1)
         dropResources()
+        if refuel(512)==false then
+            print("No enough fuel")
+            goto(0, -1, 0, 1)
+            break
+        end
         goto(x,z,xd,zd)
         saveState()
     end
