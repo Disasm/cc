@@ -210,13 +210,14 @@ end
 
 local function tryForward()
     refuel(10)
-    if not turtle.forward() then
-        if not tryDig() then
+    tries = 0
+    while not turtle.forward() do
+        forceDig()
+        tries = tries + 1
+        if tries > 20 then
             return false
         end
-        if not turtle.forward() then
-            return false
-        end
+        sleep(0.8)
     end
     xPos = xPos + xDir
     zPos = zPos + zDir
